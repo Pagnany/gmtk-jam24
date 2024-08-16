@@ -1,11 +1,20 @@
 use bevy::asset::{AssetMetaCheck, AssetPlugin};
 use bevy::{diagnostic::FrameTimeDiagnosticsPlugin, prelude::*};
 
+pub mod player;
 pub mod system;
 
-pub const SCREEN_WIDTH: f32 = 1280.0;
+pub const SCREEN_WIDTH: f32 = 720.0;
 pub const SCREEN_HEIGHT: f32 = 720.0;
 const TICK_TIME: f64 = 1.0 / 50.0;
+
+#[derive(States, Debug, Clone, PartialEq, Eq, Hash)]
+pub enum GameState {
+    LoadingScreen,
+    MainMenu,
+    InGame,
+    GameOver,
+}
 
 fn main() {
     let mut app = App::new();
@@ -28,7 +37,11 @@ fn main() {
     app.insert_resource(Time::<Fixed>::from_seconds(TICK_TIME));
     app.add_systems(
         FixedUpdate,
-        (system::kill_game_on_esc, system::fps_update_system),
+        (
+            player::player_movement,
+            system::kill_game_on_esc,
+            system::fps_update_system,
+        ),
     );
     app.add_systems(Startup, setup);
     app.run();
@@ -53,5 +66,14 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
             }),
         ]),
         system::FpsText,
+    ));
+
+    commands.spawn((
+        SpriteBundle {
+            texture: asset_server.load("textures/dog_01.png"),
+            transform: Transform::from_xyz(0.0, 0.0, 0.0),
+            ..default()
+        },
+        player::Player { ..default() },
     ));
 }
