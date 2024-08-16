@@ -1,23 +1,84 @@
 use bevy::prelude::*;
 
 pub const MOVESPEED: f32 = 250.0;
+pub const COOLDOWN: f32 = 0.5;
 
 // mouse: 20 x 20
 // dog: 40 x 100
 // kangaroo: 40 x 60
-#[derive(Default)]
+#[derive(PartialEq, Eq)]
 pub enum Animal {
     Mouse,
-    #[default]
     Dog,
     Kangaroo,
     Elephant,
     Whale,
 }
 
-#[derive(Default, Component)]
+#[derive(Component)]
 pub struct Player {
     pub animal: Animal,
+}
+
+#[derive(Component, Deref, DerefMut)]
+pub struct CooldownTimer(pub Timer);
+
+pub fn player_change_animal(
+    asset_server: Res<AssetServer>,
+    keys: Res<ButtonInput<KeyCode>>,
+    time: Res<Time>,
+    mut query: Query<(&mut Player, &mut Handle<Image>, &mut CooldownTimer)>,
+) {
+    let mut player = query.single_mut();
+    player.2.tick(time.delta());
+
+    if player.2.finished() {
+        if keys.pressed(KeyCode::KeyU) && player.0.animal != Animal::Whale {
+            let mut handle = player.1;
+            match player.0.animal {
+                Animal::Mouse => {
+                    player.0.animal = Animal::Dog;
+                    *handle = asset_server.load("textures/dog_01.png");
+                }
+                Animal::Dog => {
+                    player.0.animal = Animal::Kangaroo;
+                    *handle = asset_server.load("textures/kangaroo_01.png");
+                }
+                Animal::Kangaroo => {
+                    player.0.animal = Animal::Elephant;
+                    *handle = asset_server.load("textures/elephant_01.png");
+                }
+                Animal::Elephant => {
+                    player.0.animal = Animal::Whale;
+                    *handle = asset_server.load("textures/whale_01.png");
+                }
+                _ => (),
+            }
+            player.2.reset();
+        } else if keys.pressed(KeyCode::KeyJ) && player.0.animal != Animal::Mouse {
+            let mut handle = player.1;
+            match player.0.animal {
+                Animal::Whale => {
+                    player.0.animal = Animal::Elephant;
+                    *handle = asset_server.load("textures/elephant_01.png");
+                }
+                Animal::Elephant => {
+                    player.0.animal = Animal::Kangaroo;
+                    *handle = asset_server.load("textures/kangaroo_01.png");
+                }
+                Animal::Kangaroo => {
+                    player.0.animal = Animal::Dog;
+                    *handle = asset_server.load("textures/dog_01.png");
+                }
+                Animal::Dog => {
+                    player.0.animal = Animal::Mouse;
+                    *handle = asset_server.load("textures/mouse_01.png");
+                }
+                _ => (),
+            }
+            player.2.reset();
+        }
+    }
 }
 
 pub fn player_movement(

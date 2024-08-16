@@ -22,7 +22,7 @@ fn main() {
         DefaultPlugins
             .set(WindowPlugin {
                 primary_window: Some(Window {
-                    title: "isogame".into(),
+                    title: "animal scale".into(),
                     resolution: (SCREEN_WIDTH, SCREEN_HEIGHT).into(),
                     ..default()
                 }),
@@ -39,6 +39,7 @@ fn main() {
         FixedUpdate,
         (
             player::player_movement,
+            player::player_change_animal,
             system::kill_game_on_esc,
             system::fps_update_system,
         ),
@@ -74,6 +75,9 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
             transform: Transform::from_xyz(0.0, 0.0, 0.0),
             ..default()
         },
-        player::Player { ..default() },
+        player::Player {
+            animal: player::Animal::Dog,
+        },
+        player::CooldownTimer(Timer::from_seconds(0.1, TimerMode::Once)),
     ));
 }

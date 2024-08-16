@@ -12,8 +12,13 @@ Ideen:
 	- Wände blocken teile des Weges
 	- Tiere mit eigenschaften
 		- Wal um zu tauchen
-		- Elefant zu frei räumen
+			- Wasser über das ganze Feld
+		- Elefant zum frei räumen
+			- haut irgendwas kaputt/weg
 		- Kangaroo zum springen
+			- springt über baumstamm
 		- Gepard zum rennen
-		- Maus zum kriegen durch Tunnel/Baumstumpf
+			- läuft einfach am schnellsten
+		- Maus zum kriechen
+			- Tunnel/Mauseloch
 
