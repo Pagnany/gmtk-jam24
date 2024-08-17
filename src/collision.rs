@@ -34,13 +34,18 @@ pub fn check_collsion(
         }
     }
 
-    for (transform, map_obj) in &query_mapobject {
-        if player_x + (width / 2.0) < transform.translation.x + 360.0
-            && player_x - (width / 2.0) > transform.translation.x - 360.0
-            && player_y + (height / 2.0) < transform.translation.y + 30.0
-            && player_y - (height / 2.0) > transform.translation.y - 30.0
+    for (transform, _map_obj) in &query_mapobject {
+        let map_x = transform.translation.x;
+        let map_y = transform.translation.y;
+        let map_width = 720.0;
+        let map_height = 60.0;
+
+        if player_x + width / 2.0 > map_x - map_width / 2.0
+            && player_x - width / 2.0 < map_x + map_width / 2.0
+            && player_y + height / 2.0 > map_y - map_height / 2.0
+            && player_y - height / 2.0 < map_y + map_height / 2.0
         {
-            println!("Overlapp: {}", width);
+            println!("Collision");
         }
     }
 }
