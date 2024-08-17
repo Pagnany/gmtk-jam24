@@ -44,6 +44,7 @@ fn main() {
             player::player_change_animal,
             map::move_map,
             map::check_spawn_destroy_map_objects,
+            collision::check_collsion,
             system::kill_game_on_esc,
             system::fps_update_system,
         ),
