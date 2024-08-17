@@ -6,6 +6,8 @@ pub const COOLDOWN: f32 = 0.5;
 // mouse: 20 x 20
 // dog: 40 x 100
 // kangaroo: 40 x 60
+// elephant: 150 x 200
+// whale: 300 x 500
 #[derive(PartialEq, Eq)]
 pub enum Animal {
     Mouse,

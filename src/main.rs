@@ -1,6 +1,8 @@
 use bevy::asset::{AssetMetaCheck, AssetPlugin};
 use bevy::{diagnostic::FrameTimeDiagnosticsPlugin, prelude::*};
 
+pub mod collision;
+pub mod map;
 pub mod player;
 pub mod system;
 
@@ -40,6 +42,8 @@ fn main() {
         (
             player::player_movement,
             player::player_change_animal,
+            map::move_map,
+            map::check_spawn_destroy_map_objects,
             system::kill_game_on_esc,
             system::fps_update_system,
         ),
@@ -80,5 +84,15 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
             change_key_donw: false,
         },
         player::CooldownTimer(Timer::from_seconds(0.1, TimerMode::Once)),
+    ));
+
+    commands.spawn((
+        SpriteBundle {
+            texture: asset_server.load("textures/wall_01.png"),
+            transform: Transform::from_xyz(0.0, SCREEN_HEIGHT / 2.0, 0.0),
+            ..default()
+        },
+        map::MapObject,
+        map::Wall,
     ));
 }

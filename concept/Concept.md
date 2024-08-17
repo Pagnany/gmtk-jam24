@@ -22,3 +22,10 @@ Ideen:
 		- Maus zum kriechen
 			- Tunnel/Mauseloch
 
+# Game
+- Map
+	- Hindernisse
+		- Wände(können nicht durchquert werden)
+		- Hindernisse(müssen mit dem jeweiligen Tier überwunden werden)
+	- Objekte kommen auf den Player zu
+	- Objekte spawnen oberhalb des Screens
