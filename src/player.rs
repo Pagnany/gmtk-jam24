@@ -18,6 +18,7 @@ pub enum Animal {
 #[derive(Component)]
 pub struct Player {
     pub animal: Animal,
+    pub change_key_donw: bool,
 }
 
 #[derive(Component, Deref, DerefMut)]
@@ -32,7 +33,11 @@ pub fn player_change_animal(
     let mut player = query.single_mut();
     player.2.tick(time.delta());
 
-    if player.2.finished() {
+    if !keys.pressed(KeyCode::KeyU) && !keys.pressed(KeyCode::KeyJ) {
+        player.0.change_key_donw = false;
+    }
+
+    if player.2.finished() && !player.0.change_key_donw {
         if keys.pressed(KeyCode::KeyU) && player.0.animal != Animal::Whale {
             let mut handle = player.1;
             match player.0.animal {
@@ -55,6 +60,7 @@ pub fn player_change_animal(
                 _ => (),
             }
             player.2.reset();
+            player.0.change_key_donw = true;
         } else if keys.pressed(KeyCode::KeyJ) && player.0.animal != Animal::Mouse {
             let mut handle = player.1;
             match player.0.animal {
@@ -77,6 +83,7 @@ pub fn player_change_animal(
                 _ => (),
             }
             player.2.reset();
+            player.0.change_key_donw = true;
         }
     }
 }
