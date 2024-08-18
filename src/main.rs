@@ -3,6 +3,7 @@ use bevy::{diagnostic::FrameTimeDiagnosticsPlugin, prelude::*};
 
 pub mod collision;
 pub mod map;
+pub mod menu;
 pub mod player;
 pub mod system;
 
@@ -17,6 +18,15 @@ pub enum GameState {
     InGame,
     GameOver,
 }
+
+#[derive(SystemSet, Debug, Clone, PartialEq, Eq, Hash)]
+struct GameplaySet;
+
+#[derive(SystemSet, Debug, Clone, PartialEq, Eq, Hash)]
+struct MainMenuSet;
+
+#[derive(Component)]
+struct InGameEntity;
 
 fn main() {
     let mut app = App::new();
@@ -37,19 +47,34 @@ fn main() {
         FrameTimeDiagnosticsPlugin,
     ));
     app.insert_resource(Time::<Fixed>::from_seconds(TICK_TIME));
+    app.insert_state(GameState::InGame);
     app.add_systems(
         FixedUpdate,
         (
-            player::player_movement,
-            player::player_change_animal,
-            map::move_map,
-            map::check_spawn_destroy_map_objects,
-            collision::check_collsion,
+            (
+                player::player_movement,
+                player::player_change_animal,
+                map::move_map,
+                map::check_spawn_destroy_map_objects,
+                collision::check_collsion,
+            )
+                .in_set(GameplaySet),
+            (menu::button_system).in_set(MainMenuSet),
             system::kill_game_on_esc,
             system::fps_update_system,
         ),
     );
     app.add_systems(Startup, setup);
+    app.add_systems(OnEnter(GameState::MainMenu), menu::spawn_main_menu);
+    app.add_systems(OnExit(GameState::MainMenu), menu::despawn_main_menu);
+    app.configure_sets(
+        FixedUpdate,
+        (
+            GameplaySet.run_if(in_state(GameState::InGame)),
+            MainMenuSet
+                .run_if(in_state(GameState::MainMenu).or_else(in_state(GameState::GameOver))),
+        ),
+    );
     app.run();
 }
 
@@ -85,15 +110,5 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
             change_key_donw: false,
         },
         player::CooldownTimer(Timer::from_seconds(0.1, TimerMode::Once)),
-    ));
-
-    commands.spawn((
-        SpriteBundle {
-            texture: asset_server.load("textures/wall_01.png"),
-            transform: Transform::from_xyz(0.0, SCREEN_HEIGHT / 2.0, 0.0),
-            ..default()
-        },
-        map::MapObject,
-        map::Wall,
     ));
 }
