@@ -50,6 +50,7 @@ pub fn check_spawn_destroy_map_objects(
             },
             MapObject,
             Wall,
+            crate::InGameEntity,
         ));
 
         let wall_right_x = rand_x + (720.0 / 2.0) + (rand_gap_size / 2.0);
@@ -65,6 +66,7 @@ pub fn check_spawn_destroy_map_objects(
             },
             MapObject,
             Wall,
+            crate::InGameEntity,
         ));
     }
 }

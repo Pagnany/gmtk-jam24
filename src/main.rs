@@ -66,7 +66,13 @@ fn main() {
     );
     app.add_systems(Startup, setup);
     app.add_systems(OnEnter(GameState::MainMenu), menu::spawn_main_menu);
+    app.add_systems(OnEnter(GameState::InGame), spawn_ingame);
     app.add_systems(OnExit(GameState::MainMenu), menu::despawn_main_menu);
+    app.add_systems(OnExit(GameState::GameOver), menu::despawn_main_menu);
+    app.add_systems(
+        OnEnter(GameState::GameOver),
+        (menu::spawn_gameover_menu, despawn_ingame),
+    );
     app.configure_sets(
         FixedUpdate,
         (
@@ -98,7 +104,9 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
         ]),
         system::FpsText,
     ));
+}
 
+fn spawn_ingame(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.spawn((
         SpriteBundle {
             texture: asset_server.load("textures/dog_01.png"),
@@ -110,5 +118,12 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
             change_key_donw: false,
         },
         player::CooldownTimer(Timer::from_seconds(0.1, TimerMode::Once)),
+        InGameEntity,
     ));
+}
+
+fn despawn_ingame(mut commands: Commands, query: Query<Entity, With<InGameEntity>>) {
+    for entity in query.iter() {
+        commands.entity(entity).despawn();
+    }
 }

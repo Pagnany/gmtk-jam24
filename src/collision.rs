@@ -5,6 +5,7 @@ use crate::{map::MapObject, player::Player};
 pub fn check_collsion(
     mut query_player: Query<(&Player, &Transform)>,
     query_mapobject: Query<(&Transform, &MapObject)>,
+    mut next_state: ResMut<NextState<crate::GameState>>,
 ) {
     let player = query_player.single_mut();
     let player_x = player.1.translation.x;
@@ -45,7 +46,7 @@ pub fn check_collsion(
             && player_y + height / 2.0 > map_y - map_height / 2.0
             && player_y - height / 2.0 < map_y + map_height / 2.0
         {
-            println!("Collision");
+            next_state.set(crate::GameState::GameOver);
         }
     }
 }
