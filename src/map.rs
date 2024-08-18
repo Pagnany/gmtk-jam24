@@ -1,6 +1,7 @@
 use bevy::prelude::*;
 use rand::Rng;
 
+// wall: 720 x 60
 #[derive(Component)]
 pub struct Wall;
 
@@ -13,8 +14,6 @@ pub fn move_map(time: Res<Time>, mut query: Query<(&MapObject, &mut Transform)>)
     }
 }
 
-/// checks if map objects are out of screen
-/// checks if new map objects have to be spawned
 pub fn check_spawn_destroy_map_objects(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
@@ -26,7 +25,6 @@ pub fn check_spawn_destroy_map_objects(
             highes_obj = transform.translation.y;
         }
         if transform.translation.y < -1.0 * crate::SCREEN_HEIGHT / 2.0 - 200.0 {
-            // despawn
             commands.entity(entity).despawn();
         }
     }

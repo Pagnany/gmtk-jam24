@@ -47,7 +47,7 @@ fn main() {
         FrameTimeDiagnosticsPlugin,
     ));
     app.insert_resource(Time::<Fixed>::from_seconds(TICK_TIME));
-    app.insert_state(GameState::InGame);
+    app.insert_state(GameState::MainMenu);
     app.add_systems(
         FixedUpdate,
         (
