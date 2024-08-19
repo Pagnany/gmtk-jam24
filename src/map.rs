@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use rand::Rng;
 
-// wall: 720 x 60
+/// wall: 720 x 60
 #[derive(Component)]
 pub struct Wall;
 

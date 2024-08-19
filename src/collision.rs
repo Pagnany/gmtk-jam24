@@ -10,30 +10,13 @@ pub fn check_collsion(
     let player = query_player.single_mut();
     let player_x = player.1.translation.x;
     let player_y = player.1.translation.y;
-    let mut width = 0.0;
-    let mut height = 0.0;
-    match player.0.animal {
-        crate::player::Animal::Mouse => {
-            width = 20.0;
-            height = 20.0;
-        }
-        crate::player::Animal::Dog => {
-            width = 40.0;
-            height = 100.0;
-        }
-        crate::player::Animal::Kangaroo => {
-            width = 40.0;
-            height = 60.0;
-        }
-        crate::player::Animal::Elephant => {
-            width = 150.0;
-            height = 200.0;
-        }
-        crate::player::Animal::Whale => {
-            width = 300.0;
-            height = 500.0;
-        }
-    }
+    let (width, height) = match player.0.animal {
+        crate::player::Animal::Mouse => (20.0, 20.0),
+        crate::player::Animal::Dog => (40.0, 100.0),
+        crate::player::Animal::Kangaroo => (40.0, 60.0),
+        crate::player::Animal::Elephant => (150.0, 200.0),
+        crate::player::Animal::Whale => (300.0, 500.0),
+    };
 
     for (transform, _map_obj) in &query_mapobject {
         let map_x = transform.translation.x;

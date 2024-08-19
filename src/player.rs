@@ -3,11 +3,11 @@ use bevy::prelude::*;
 pub const MOVESPEED: f32 = 250.0;
 pub const COOLDOWN: f32 = 0.5;
 
-// mouse: 20 x 20
-// dog: 40 x 100
-// kangaroo: 40 x 60
-// elephant: 150 x 200
-// whale: 300 x 500
+/// mouse: 20 x 20
+/// dog: 40 x 100
+/// kangaroo: 40 x 60
+/// elephant: 150 x 200
+/// whale: 300 x 500
 #[derive(PartialEq, Eq)]
 pub enum Animal {
     Mouse,
@@ -20,7 +20,7 @@ pub enum Animal {
 #[derive(Component)]
 pub struct Player {
     pub animal: Animal,
-    pub change_key_donw: bool,
+    pub change_key_down: bool,
 }
 
 #[derive(Component, Deref, DerefMut)]
@@ -36,10 +36,10 @@ pub fn player_change_animal(
     player.2.tick(time.delta());
 
     if !keys.pressed(KeyCode::KeyU) && !keys.pressed(KeyCode::KeyJ) {
-        player.0.change_key_donw = false;
+        player.0.change_key_down = false;
     }
 
-    if player.2.finished() && !player.0.change_key_donw {
+    if player.2.finished() && !player.0.change_key_down {
         if keys.pressed(KeyCode::KeyU) && player.0.animal != Animal::Whale {
             let mut handle = player.1;
             match player.0.animal {
@@ -62,7 +62,7 @@ pub fn player_change_animal(
                 _ => (),
             }
             player.2.reset();
-            player.0.change_key_donw = true;
+            player.0.change_key_down = true;
         } else if keys.pressed(KeyCode::KeyJ) && player.0.animal != Animal::Mouse {
             let mut handle = player.1;
             match player.0.animal {
@@ -85,7 +85,7 @@ pub fn player_change_animal(
                 _ => (),
             }
             player.2.reset();
-            player.0.change_key_donw = true;
+            player.0.change_key_down = true;
         }
     }
 }
