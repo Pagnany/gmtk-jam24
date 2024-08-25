@@ -7,9 +7,11 @@ pub enum BlockType {
     /// 60 x 60
     MouseHole,
     /// for Kangaroo
-    Tree,
+    GroundHole,
     /// for Elephant
     WoodWall,
+    // for Whale
+    Water,
 }
 
 /// wall: 720 x 60
@@ -52,9 +54,9 @@ pub fn check_spawn_destroy_map_objects(
         let left = -1.0 * crate::SCREEN_WIDTH / 2.0 + 100.0;
         let right = crate::SCREEN_WIDTH / 2.0 - 100.0;
         let rand_x = rng.gen_range(left..right);
-        let mut gap_size = 100.0;
-        let mut wall_left_x = 0.0;
-        let mut wall_right_x = 0.0;
+        let gap_size;
+        let wall_left_x;
+        let wall_right_x;
 
         match rand_object {
             1 => {
@@ -81,7 +83,7 @@ pub fn check_spawn_destroy_map_objects(
                 ));
             }
             2 => {
-                //Tree
+                //Ground Hole
                 gap_size = 60.0;
                 wall_left_x = rand_x - (720.0 / 2.0) - (gap_size / 2.0);
                 wall_right_x = rand_x + (720.0 / 2.0) + (gap_size / 2.0);
@@ -98,16 +100,19 @@ pub fn check_spawn_destroy_map_objects(
                 wall_left_x = rand_x - (720.0 / 2.0) - (gap_size / 2.0);
                 wall_right_x = rand_x + (720.0 / 2.0) + (gap_size / 2.0);
             }
-            5..10 => {
+            _ => {
+                // Normal Walls
                 gap_size = rng.gen_range(60.0..300.0);
                 wall_left_x = rand_x - (720.0 / 2.0) - (gap_size / 2.0);
                 wall_right_x = rand_x + (720.0 / 2.0) + (gap_size / 2.0);
             }
-            _ => (),
         }
 
-        //println!("left: {} right: {}", left, right);
-        println!("rand: {}", rand_x);
+        //println!(
+        //    "rand: {}, gap_size: {}, wall_left: {}, wall_right: {}",
+        //    rand_x, gap_size, wall_left_x, wall_right_x
+        //);
+
         commands.spawn((
             SpriteBundle {
                 texture: asset_server.load("textures/wall_02.png"),
