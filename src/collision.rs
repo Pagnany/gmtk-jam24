@@ -1,10 +1,10 @@
 use bevy::prelude::*;
 
-use crate::{map::MapObject, player::Player};
+use crate::{map::Wall, player::Player};
 
 pub fn check_collsion(
     mut query_player: Query<(&Player, &Transform)>,
-    query_mapobject: Query<(&Transform, &MapObject)>,
+    query_mapobject: Query<(&Transform, &Wall)>,
     mut next_state: ResMut<NextState<crate::GameState>>,
 ) {
     let player = query_player.single_mut();
