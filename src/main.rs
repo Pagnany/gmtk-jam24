@@ -58,7 +58,8 @@ fn main() {
                 player::player_change_animal,
                 map::move_map,
                 map::check_spawn_destroy_map_objects,
-                collision::check_collsion,
+                collision::check_collision_wall,
+                collision::check_collision_blockage,
             )
                 .in_set(GameplaySet),
             (menu::button_system).in_set(MainMenuSet),

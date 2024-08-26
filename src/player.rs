@@ -17,6 +17,17 @@ pub enum Animal {
     Whale,
 }
 
+/// Player width and height for animal
+pub fn get_player_size(animal_type: &Animal) -> (f32, f32) {
+    match animal_type {
+        Animal::Mouse => (20.0, 20.0),
+        Animal::Dog => (40.0, 100.0),
+        Animal::Kangaroo => (40.0, 60.0),
+        Animal::Elephant => (150.0, 200.0),
+        Animal::Whale => (300.0, 500.0),
+    }
+}
+
 #[derive(Component)]
 pub struct Player {
     pub animal: Animal,
