@@ -16,6 +16,15 @@ pub enum BlockType {
     Water,
 }
 
+pub fn get_block_size(block_type: &BlockType) -> (f32, f32) {
+    match block_type {
+        BlockType::MouseHole => (60.0, 60.0),
+        BlockType::GroundHole => (100.0, 60.0),
+        BlockType::WoodWall => (200.0, 60.0),
+        BlockType::Water => (0.0, 0.0),
+    }
+}
+
 /// wall: 720 x 60
 /// for collision
 #[derive(Component)]
@@ -23,7 +32,7 @@ pub struct Wall;
 
 #[derive(Component)]
 pub struct Blockage {
-    block_type: BlockType,
+    pub block_type: BlockType,
 }
 
 /// All objects that move down when playing
@@ -56,7 +65,7 @@ pub fn check_spawn_destroy_map_objects(
 
     if highes_obj <= 100.0 {
         let mut rng = rand::thread_rng();
-        let rand_object = rng.gen_range(1..=10);
+        let rand_object = rng.gen_range(1..=8);
 
         // gap pos limit left and right
         // 100px buffer
