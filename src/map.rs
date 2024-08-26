@@ -7,8 +7,10 @@ pub enum BlockType {
     /// 60 x 60
     MouseHole,
     /// for Kangaroo
+    /// 100 x 60
     GroundHole,
     /// for Elephant
+    /// 200 x 60
     WoodWall,
     // for Whale
     Water,
@@ -69,7 +71,7 @@ pub fn check_spawn_destroy_map_objects(
                     SpriteBundle {
                         texture: asset_server.load("textures/mouse_hole_01.png"),
                         transform: Transform::from_xyz(
-                            wall_left_x + 360.0 + 30.0,
+                            wall_left_x + 360.0 + (gap_size / 2.0),
                             crate::SCREEN_HEIGHT / 2.0 + 200.0,
                             0.9,
                         ),
@@ -84,15 +86,49 @@ pub fn check_spawn_destroy_map_objects(
             }
             2 => {
                 //Ground Hole
-                gap_size = 60.0;
+                gap_size = 100.0;
                 wall_left_x = rand_x - (720.0 / 2.0) - (gap_size / 2.0);
                 wall_right_x = rand_x + (720.0 / 2.0) + (gap_size / 2.0);
+
+                commands.spawn((
+                    SpriteBundle {
+                        texture: asset_server.load("textures/ground_hole_01.png"),
+                        transform: Transform::from_xyz(
+                            wall_left_x + 360.0 + (gap_size / 2.0),
+                            crate::SCREEN_HEIGHT / 2.0 + 200.0,
+                            0.9,
+                        ),
+                        ..default()
+                    },
+                    Blockage {
+                        block_type: BlockType::GroundHole,
+                    },
+                    MapObject,
+                    crate::InGameEntity,
+                ));
             }
             3 => {
                 //WoodWall
-                gap_size = 60.0;
+                gap_size = 200.0;
                 wall_left_x = rand_x - (720.0 / 2.0) - (gap_size / 2.0);
                 wall_right_x = rand_x + (720.0 / 2.0) + (gap_size / 2.0);
+
+                commands.spawn((
+                    SpriteBundle {
+                        texture: asset_server.load("textures/wood_wall_01.png"),
+                        transform: Transform::from_xyz(
+                            wall_left_x + 360.0 + (gap_size / 2.0),
+                            crate::SCREEN_HEIGHT / 2.0 + 200.0,
+                            0.9,
+                        ),
+                        ..default()
+                    },
+                    Blockage {
+                        block_type: BlockType::WoodWall,
+                    },
+                    MapObject,
+                    crate::InGameEntity,
+                ));
             }
             4 => {
                 //Water
