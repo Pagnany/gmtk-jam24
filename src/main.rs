@@ -25,6 +25,8 @@ struct GameplaySet;
 #[derive(SystemSet, Debug, Clone, PartialEq, Eq, Hash)]
 struct MainMenuSet;
 
+/// Objects spawn when start playing
+/// When gameover objects despawn
 #[derive(Component)]
 struct InGameEntity;
 

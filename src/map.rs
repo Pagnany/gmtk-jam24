@@ -17,6 +17,7 @@ pub enum BlockType {
 }
 
 /// wall: 720 x 60
+/// for collision
 #[derive(Component)]
 pub struct Wall;
 
@@ -25,6 +26,7 @@ pub struct Blockage {
     block_type: BlockType,
 }
 
+/// All objects that move down when playing
 #[derive(Component)]
 pub struct MapObject;
 
@@ -39,6 +41,9 @@ pub fn check_spawn_destroy_map_objects(
     asset_server: Res<AssetServer>,
     query: Query<(Entity, &MapObject, &Transform)>,
 ) {
+    // checks if a new object should be spawned
+    // checks if an object is out of the screen to the bottom
+    // and should be despawned
     let mut highes_obj = -1000.0;
     for (entity, _map_obj, transform) in &query {
         if transform.translation.y > highes_obj {
@@ -53,9 +58,14 @@ pub fn check_spawn_destroy_map_objects(
         let mut rng = rand::thread_rng();
         let rand_object = rng.gen_range(1..=10);
 
+        // gap pos limit left and right
+        // 100px buffer
         let left = -1.0 * crate::SCREEN_WIDTH / 2.0 + 100.0;
         let right = crate::SCREEN_WIDTH / 2.0 - 100.0;
+
+        // gap pos
         let rand_x = rng.gen_range(left..right);
+
         let gap_size;
         let wall_left_x;
         let wall_right_x;
@@ -85,7 +95,7 @@ pub fn check_spawn_destroy_map_objects(
                 ));
             }
             2 => {
-                //Ground Hole
+                // GroundHole
                 gap_size = 100.0;
                 wall_left_x = rand_x - (720.0 / 2.0) - (gap_size / 2.0);
                 wall_right_x = rand_x + (720.0 / 2.0) + (gap_size / 2.0);
@@ -108,7 +118,7 @@ pub fn check_spawn_destroy_map_objects(
                 ));
             }
             3 => {
-                //WoodWall
+                // WoodWall
                 gap_size = 200.0;
                 wall_left_x = rand_x - (720.0 / 2.0) - (gap_size / 2.0);
                 wall_right_x = rand_x + (720.0 / 2.0) + (gap_size / 2.0);
@@ -131,10 +141,11 @@ pub fn check_spawn_destroy_map_objects(
                 ));
             }
             4 => {
-                //Water
-                gap_size = 60.0;
-                wall_left_x = rand_x - (720.0 / 2.0) - (gap_size / 2.0);
-                wall_right_x = rand_x + (720.0 / 2.0) + (gap_size / 2.0);
+                // Water
+                // always in the middle
+                gap_size = 650.0;
+                wall_left_x = 0.0 - (720.0 / 2.0) - (gap_size / 2.0);
+                wall_right_x = 0.0 + (720.0 / 2.0) + (gap_size / 2.0);
             }
             _ => {
                 // Normal Walls
@@ -149,6 +160,7 @@ pub fn check_spawn_destroy_map_objects(
         //    rand_x, gap_size, wall_left_x, wall_right_x
         //);
 
+        // spawn walls left and right
         commands.spawn((
             SpriteBundle {
                 texture: asset_server.load("textures/wall_02.png"),
