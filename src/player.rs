@@ -1,6 +1,5 @@
 use bevy::prelude::*;
 
-pub const MOVESPEED: f32 = 250.0;
 pub const COOLDOWN: f32 = 0.5;
 
 /// mouse: 20 x 20
@@ -32,6 +31,7 @@ pub fn get_player_size(animal_type: &Animal) -> (f32, f32) {
 pub struct Player {
     pub animal: Animal,
     pub change_key_down: bool,
+    pub move_speed: f32,
 }
 
 #[derive(Component, Deref, DerefMut)]
@@ -56,18 +56,22 @@ pub fn player_change_animal(
             match player.0.animal {
                 Animal::Mouse => {
                     player.0.animal = Animal::Dog;
+                    player.0.move_speed = 200.0;
                     *handle = asset_server.load("textures/dog_01.png");
                 }
                 Animal::Dog => {
                     player.0.animal = Animal::Kangaroo;
+                    player.0.move_speed = 150.0;
                     *handle = asset_server.load("textures/kangaroo_01.png");
                 }
                 Animal::Kangaroo => {
                     player.0.animal = Animal::Elephant;
+                    player.0.move_speed = 150.0;
                     *handle = asset_server.load("textures/elephant_01.png");
                 }
                 Animal::Elephant => {
                     player.0.animal = Animal::Whale;
+                    player.0.move_speed = 50.0;
                     *handle = asset_server.load("textures/whale_01.png");
                 }
                 _ => (),
@@ -79,18 +83,22 @@ pub fn player_change_animal(
             match player.0.animal {
                 Animal::Whale => {
                     player.0.animal = Animal::Elephant;
+                    player.0.move_speed = 150.0;
                     *handle = asset_server.load("textures/elephant_01.png");
                 }
                 Animal::Elephant => {
                     player.0.animal = Animal::Kangaroo;
+                    player.0.move_speed = 150.0;
                     *handle = asset_server.load("textures/kangaroo_01.png");
                 }
                 Animal::Kangaroo => {
                     player.0.animal = Animal::Dog;
+                    player.0.move_speed = 200.0;
                     *handle = asset_server.load("textures/dog_01.png");
                 }
                 Animal::Dog => {
                     player.0.animal = Animal::Mouse;
+                    player.0.move_speed = 50.0;
                     *handle = asset_server.load("textures/mouse_01.png");
                 }
                 _ => (),
@@ -109,16 +117,16 @@ pub fn player_movement(
     let mut player = query.single_mut();
 
     if keys.pressed(KeyCode::KeyW) {
-        player.1.translation.y += time.delta_seconds() * MOVESPEED;
+        player.1.translation.y += time.delta_seconds() * player.0.move_speed * 1.25;
     }
     if keys.pressed(KeyCode::KeyA) {
-        player.1.translation.x -= time.delta_seconds() * MOVESPEED;
+        player.1.translation.x -= time.delta_seconds() * player.0.move_speed * 1.25;
     }
     if keys.pressed(KeyCode::KeyS) {
-        player.1.translation.y -= time.delta_seconds() * MOVESPEED;
+        player.1.translation.y -= time.delta_seconds() * player.0.move_speed * 1.25;
     }
     if keys.pressed(KeyCode::KeyD) {
-        player.1.translation.x += time.delta_seconds() * MOVESPEED;
+        player.1.translation.x += time.delta_seconds() * player.0.move_speed * 1.25;
     }
 
     if player.1.translation.x < -1.0 * crate::SCREEN_WIDTH / 2.0 {

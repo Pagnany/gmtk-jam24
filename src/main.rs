@@ -119,6 +119,7 @@ fn spawn_ingame(mut commands: Commands, asset_server: Res<AssetServer>) {
         player::Player {
             animal: player::Animal::Dog,
             change_key_down: false,
+            move_speed: 200.0,
         },
         player::CooldownTimer(Timer::from_seconds(0.1, TimerMode::Once)),
         InGameEntity,

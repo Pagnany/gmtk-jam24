@@ -39,9 +39,14 @@ pub struct Blockage {
 #[derive(Component)]
 pub struct MapObject;
 
-pub fn move_map(time: Res<Time>, mut query: Query<(&MapObject, &mut Transform)>) {
+pub fn move_map(
+    time: Res<Time>,
+    mut query: Query<(&MapObject, &mut Transform)>,
+    query_player: Query<&crate::player::Player>,
+) {
+    let player = query_player.single();
     for (_map_obj, mut transform) in &mut query {
-        transform.translation.y -= 150.0 * time.delta_seconds();
+        transform.translation.y -= player.move_speed * time.delta_seconds();
     }
 }
 
