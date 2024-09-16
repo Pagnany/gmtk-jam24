@@ -9,7 +9,7 @@ pub mod system;
 
 pub const SCREEN_WIDTH: f32 = 720.0;
 pub const SCREEN_HEIGHT: f32 = 720.0;
-const TICK_TIME: f64 = 1.0 / 50.0;
+const TICK_TIME: f64 = 1.0 / 60.0;
 
 #[derive(States, Debug, Clone, PartialEq, Eq, Hash)]
 pub enum GameState {
@@ -29,6 +29,9 @@ struct MainMenuSet;
 /// When gameover objects despawn
 #[derive(Component)]
 struct InGameEntity;
+
+#[derive(Component)]
+pub struct Score(pub u32);
 
 fn main() {
     let mut app = App::new();
@@ -60,6 +63,7 @@ fn main() {
                 map::check_spawn_destroy_map_objects,
                 collision::check_collision_wall,
                 collision::check_collision_blockage,
+                menu::score_update_system,
             )
                 .in_set(GameplaySet),
             (menu::button_system).in_set(MainMenuSet),
@@ -90,10 +94,41 @@ fn main() {
 fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.spawn(Camera2dBundle::default());
 
+    //commands.spawn((
+    //    TextBundle::from_sections([
+    //        TextSection::new(
+    //            "FPS: ",
+    //            TextStyle {
+    //                font_size: 20.0,
+    //                color: Color::WHITE,
+    //                ..Default::default()
+    //            },
+    //        ),
+    //        TextSection::from_style(TextStyle {
+    //            font_size: 20.0,
+    //            ..Default::default()
+    //        }),
+    //    ]),
+    //    system::FpsText,
+    //));
+
+    commands.spawn(Score(0));
+}
+
+fn spawn_ingame(
+    mut commands: Commands,
+    asset_server: Res<AssetServer>,
+    mut query_score: Query<&mut crate::Score>,
+) {
+    // reset Score
+    let mut score = query_score.single_mut();
+    score.0 = 0;
+
+    // create objects
     commands.spawn((
         TextBundle::from_sections([
             TextSection::new(
-                "FPS: ",
+                "Score: ",
                 TextStyle {
                     font_size: 20.0,
                     color: Color::WHITE,
@@ -105,11 +140,9 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
                 ..Default::default()
             }),
         ]),
-        system::FpsText,
+        menu::ScoreText,
     ));
-}
 
-fn spawn_ingame(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.spawn((
         SpriteBundle {
             texture: asset_server.load("textures/dog_01.png"),

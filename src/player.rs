@@ -112,7 +112,7 @@ pub fn player_change_animal(
 pub fn player_movement(
     keys: Res<ButtonInput<KeyCode>>,
     time: Res<Time>,
-    mut query: Query<(&mut Player, &mut Transform)>,
+    mut query: Query<(&Player, &mut Transform)>,
 ) {
     let mut player = query.single_mut();
 

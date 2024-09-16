@@ -43,11 +43,16 @@ pub fn move_map(
     time: Res<Time>,
     mut query: Query<(&MapObject, &mut Transform)>,
     query_player: Query<&crate::player::Player>,
+    mut query_score: Query<&mut crate::Score>,
 ) {
     let player = query_player.single();
     for (_map_obj, mut transform) in &mut query {
         transform.translation.y -= player.move_speed * time.delta_seconds();
     }
+
+    // Score
+    let mut temp = query_score.single_mut();
+    temp.0 += (1000.0 * time.delta_seconds()) as u32;
 }
 
 pub fn check_spawn_destroy_map_objects(
@@ -169,11 +174,6 @@ pub fn check_spawn_destroy_map_objects(
             }
         }
 
-        //println!(
-        //    "rand: {}, gap_size: {}, wall_left: {}, wall_right: {}",
-        //    rand_x, gap_size, wall_left_x, wall_right_x
-        //);
-
         // spawn walls left and right
         commands.spawn((
             SpriteBundle {
@@ -189,7 +189,6 @@ pub fn check_spawn_destroy_map_objects(
             Wall,
             crate::InGameEntity,
         ));
-
         commands.spawn((
             SpriteBundle {
                 texture: asset_server.load("textures/wall_02.png"),

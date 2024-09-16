@@ -155,3 +155,17 @@ pub fn spawn_gameover_menu(mut commands: Commands, asset_server: Res<AssetServer
                 });
         });
 }
+
+#[derive(Component)]
+pub struct ScoreText;
+
+pub fn score_update_system(
+    mut query: Query<&mut Text, With<ScoreText>>,
+    query_score: Query<&crate::Score>,
+) {
+    let score = query_score.single();
+    for mut text in &mut query {
+        let value = score.0;
+        text.sections[1].value = format!("{value:.2}");
+    }
+}
